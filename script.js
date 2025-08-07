@@ -6,40 +6,51 @@ let gameStarted = false;
 let startTime;
 let timerInterval;
 let images = [];
-let volume = 0.5; // Default volume
+let volume = 0.5;
 let matchSoundCooldown = false;
-let touchLock = false; // Prevent rapid touch events
+let touchLock = false;
+let playerName = '';
+let currentDifficulty = 'expert';
 
-// DOM Elements
+
 const gameBoard = document.getElementById('gameBoard');
 const timeDisplay = document.getElementById('time');
 const flipsDisplay = document.getElementById('flips');
 const matchesDisplay = document.getElementById('matches');
 const instructionText = document.getElementById('instructionText');
 const instructionBtn = document.getElementById('instructionBtn');
+const playerNameInput = document.getElementById('playerName');
 const startText = document.getElementById('startText');
 const winText = document.getElementById('winText');
 const scoreText = document.getElementById('scoreText');
+const leaderboard = document.getElementById('leaderboard');
+const leaderboardBodies = {
+    easy: document.getElementById('leaderboardBody-easy'),
+    medium: document.getElementById('leaderboardBody-medium'),
+    hard: document.getElementById('leaderboardBody-hard'),
+    expert: document.getElementById('leaderboardBody-expert')
+};
 const restartBtn = document.getElementById('restartBtn');
+const leaderboardBtn = document.getElementById('leaderboardBtn');
+const closeLeaderboardBtn = document.getElementById('closeLeaderboardBtn');
 const levelSelect = document.getElementById('level');
 const volumeControl = document.getElementById('volume');
 
-// Sound Effects
 const flipSound = new Audio('Assets/sound/flip.mp3');
 const matchSound = new Audio('Assets/sound/match.mp3');
 const wrongSound = new Audio('Assets/sound/wrong.mp3');
 const winSound = new Audio('Assets/sound/win.mp3');
 
-// Apply initial volume
+
 [flipSound, matchSound, wrongSound, winSound].forEach(sound => {
     sound.volume = volume;
 });
 
-// Prevent overlapping sounds and manage match sound timer
+
 function playSound(sound) {
-    if (sound === matchSound && matchSoundCooldown) return; // Skip if match sound is in cooldown
-    if (sound.paused || sound.ended) { // Only play if sound is not currently playing
-        sound.volume = volume; // Apply current volume
+    if (sound === matchSound && matchSoundCooldown) return;
+    if (sound.paused || sound.ended) {
+        sound.volume = volume;
         sound.pause();
         sound.currentTime = 0;
         sound.play().catch((error) => {
@@ -48,16 +59,16 @@ function playSound(sound) {
         if (sound === matchSound) {
             matchSoundCooldown = true;
             setTimeout(() => {
-                sound.pause(); // Stop match sound after 3 seconds
+                sound.pause();
                 setTimeout(() => {
-                    matchSoundCooldown = false; // Allow replay after 2-second cooldown
+                    matchSoundCooldown = false;
                 }, 2000);
             }, 3000);
         }
     }
 }
 
-// Fisher-Yates Shuffle
+
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -66,34 +77,99 @@ function shuffle(array) {
     return array;
 }
 
-// Calculate total score
-function calculateScore() {
+
+function calculateScore(difficulty) {
     const elapsedSeconds = Math.floor((new Date() - startTime) / 1000);
-    const baseScore = 1000;
-    const flipPenalty = totalFlips * 10;
-    const timePenalty = elapsedSeconds * 5;
-    return Math.max(0, baseScore - flipPenalty - timePenalty);
+    const elapsedMinutes = Math.floor(elapsedSeconds / 60);
+    const targetMinutes = 100;
+    let baseScore = 0;
+
+    if (elapsedMinutes <= targetMinutes) {
+        baseScore = 100 - elapsedMinutes;
+    } else {
+        baseScore = (elapsedMinutes - targetMinutes) * 0.5;
+    }
+
+    const difficultyMultipliers = {
+        easy: 1,
+        medium: 1.2,
+        hard: 1.5,
+        expert: 2
+    };
+
+    const multiplier = difficultyMultipliers[difficulty] || 1;
+    const finalScore = Math.max(0, Math.round(baseScore * multiplier));
+    return finalScore;
+}
+
+
+function saveScore(name, score, difficulty, timestamp) {
+    const key = `leaderboard_${difficulty}`;
+    const scores = JSON.parse(localStorage.getItem(key) || '[]');
+    scores.push({ name, score, timestamp });
+    localStorage.setItem(key, JSON.stringify(scores));
+    updateLeaderboard();
+}
+
+
+function updateLeaderboard() {
+    const difficulties = ['easy', 'medium', 'hard', 'expert'];
+    const allScores = {};
+
+    difficulties.forEach(diff => {
+        const key = `leaderboard_${diff}`;
+        allScores[diff] = JSON.parse(localStorage.getItem(key) || '[]');
+        allScores[diff].sort((a, b) => b.score - a.score || a.timestamp - b.timestamp);
+    });
+
+    displayLeaderboard(allScores);
+}
+
+
+function displayLeaderboard(allScores) {
+    const difficulties = ['easy', 'medium', 'hard', 'expert'];
+    difficulties.forEach(diff => {
+        const tbody = leaderboardBodies[diff];
+        tbody.innerHTML = '';
+        const scores = allScores[diff].slice(0, 5); // Top 5 per difficulty
+        scores.forEach((entry, index) => {
+            const row = document.createElement('tr');
+            if (index === 0) {
+                row.classList.add('leader-row');
+            }
+            const date = new Date(entry.timestamp);
+            const timeStr = `${date.getUTCHours().toString().padStart(2, '0')}:${date.getUTCMinutes().toString().padStart(2, '0')}`;
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${entry.name}</td>
+                <td>${entry.score}</td>
+                <td>${timeStr}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    });
+    leaderboard.classList.add('visible');
 }
 
 // Start the game
 function startGame(difficulty) {
+    currentDifficulty = difficulty;
     const imageCounts = {
-        easy: 3,    // 3 unique images (6 cards)
-        medium: 4,  // 4 unique images (8 cards)
-        hard: 5,    // 5 unique images (10 cards)
-        expert: 6   // 6 unique images (12 cards)
+        easy: 3,
+        medium: 4,
+        hard: 5,
+        expert: 6
     };
 
-    const selectedCount = imageCounts[difficulty] || 6; // Default to expert
+    const selectedCount = imageCounts[difficulty] || 6;
     const folder = `images/${difficulty}`;
     images = [];
 
     for (let i = 1; i <= selectedCount; i++) {
-        images.push(`img${i}.png`);
+        images.push(`coffee${i}.png`);
     }
 
-    // Create 12 cards (fill with duplicates if needed)
-    const totalCards = 12; // 4 columns x 3 rows
+    const totalCards = 12;
     const pairedImages = [];
     const uniqueImages = images.slice(0, Math.min(selectedCount, totalCards / 2));
     const duplicates = [...uniqueImages, ...uniqueImages];
@@ -117,11 +193,12 @@ function startGame(difficulty) {
     winText.classList.remove('visible');
     instructionText.classList.remove('visible');
     startText.classList.remove('visible');
+    leaderboard.classList.remove('visible');
 
     renderGameBoard(shuffledImages, folder);
 }
 
-// Render all cards
+
 function renderGameBoard(imageList, folder) {
     gameBoard.innerHTML = '';
 
@@ -134,15 +211,14 @@ function renderGameBoard(imageList, folder) {
             <div class="card-inner">
                 <div class="card-front"></div>
                 <div class="card-back">
-                    <img src="${folder}/${imgSrc}" alt="Card Image">
+                    <img src="${folder}/${imgSrc}" alt="Espresso Image">
                 </div>
             </div>
         `;
 
-        // Add both click and touchstart events for cards
         card.addEventListener('click', () => flipCard(card));
         card.addEventListener('touchstart', (e) => {
-            e.preventDefault(); // Prevent default touch behaviors
+            e.preventDefault();
             flipCard(card);
         });
         gameBoard.appendChild(card);
@@ -150,7 +226,7 @@ function renderGameBoard(imageList, folder) {
     });
 }
 
-// Handle flipping cards
+
 function flipCard(card) {
     if (
         touchLock ||
@@ -159,8 +235,8 @@ function flipCard(card) {
         card.classList.contains('matched')
     ) return;
 
-    touchLock = true; // Lock touch/click events
-    setTimeout(() => { touchLock = false; }, 300); // Release lock after 300ms
+    touchLock = true;
+    setTimeout(() => { touchLock = false; }, 300);
 
     if (!gameStarted) {
         gameStarted = true;
@@ -186,7 +262,7 @@ function flipCard(card) {
                 playSound(matchSound);
                 updateStats();
 
-                if (matchedPairs === 6) { // 6 pairs in 12 cards
+                if (matchedPairs === 6) {
                     endGame();
                 }
             } else {
@@ -199,13 +275,12 @@ function flipCard(card) {
     }
 }
 
-// Update stats
+
 function updateStats() {
     flipsDisplay.textContent = `🔁 Flips: ${totalFlips}`;
     matchesDisplay.textContent = `✅ Matches: ${matchedPairs}`;
 }
 
-// Update timer
 function updateTimer() {
     const now = new Date();
     const elapsed = new Date(now - startTime);
@@ -214,45 +289,62 @@ function updateTimer() {
     timeDisplay.textContent = `⏱ Time: ${mins}:${secs}`;
 }
 
-// End game
+
 function endGame() {
     clearInterval(timerInterval);
     setTimeout(() => {
-        playSound(winSound); // Stagger win sound to avoid overlap
+        playSound(winSound);
         winText.classList.add('visible');
         setTimeout(() => {
             winText.classList.remove('visible');
-            const totalScore = calculateScore();
+            const totalScore = calculateScore(currentDifficulty);
             scoreText.textContent = `Total Score: ${totalScore}`;
             scoreText.classList.add('visible');
-        }, 2000); // Show score after 2 seconds
-    }, 500); // Delay win sound by 500ms
+            saveScore(playerName, totalScore, currentDifficulty, Date.now());
+        }, 2000);
+    }, 500);
 }
 
-// Event listeners
 function addInteractionListeners(element, handler) {
     element.addEventListener('click', handler);
     element.addEventListener('touchstart', (e) => {
-        e.preventDefault(); // Prevent default touch behaviors
+        e.preventDefault();
         handler();
     });
 }
 
 addInteractionListeners(instructionBtn, () => {
+    const name = playerNameInput.value.trim();
+    if (name === '') {
+        alert('Please enter a nickname to start the game.');
+        return;
+    }
+    playerName = name;
     instructionText.classList.remove('visible');
-    startGame(levelSelect.value); // Start game directly
+    startGame(levelSelect.value);
 });
 
 addInteractionListeners(restartBtn, () => {
     winText.classList.remove('visible');
     scoreText.classList.remove('visible');
+    leaderboard.classList.remove('visible');
     instructionText.classList.add('visible');
-    startGame(levelSelect.value); // Restart with selected difficulty
+    playerNameInput.value = '';
+    startGame(levelSelect.value);
 });
 
 addInteractionListeners(levelSelect, () => {
     instructionText.classList.add('visible');
-    startGame(levelSelect.value); // Restart with new difficulty
+    playerNameInput.value = '';
+    startGame(levelSelect.value);
+});
+
+addInteractionListeners(leaderboardBtn, () => {
+    updateLeaderboard();
+});
+
+addInteractionListeners(closeLeaderboardBtn, () => {
+    leaderboard.classList.remove('visible');
 });
 
 volumeControl.addEventListener('input', () => {
@@ -262,5 +354,11 @@ volumeControl.addEventListener('input', () => {
     });
 });
 
-// Initialize instruction overlay on page load
+
 instructionText.classList.add('visible');
+['easy', 'medium', 'hard', 'expert'].forEach(diff => {
+    const key = `leaderboard_${diff}`;
+    if (!localStorage.getItem(key)) {
+        localStorage.setItem(key, JSON.stringify([]));
+    }
+});

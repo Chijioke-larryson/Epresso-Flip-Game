@@ -6,27 +6,29 @@ body {
     text-align: center;
     background: url('Assets/Images/bg.jpg') no-repeat center center fixed;
     background-size: cover;
-    color: #fff;
+    color: #FFF3E0; /* Cream */
     display: flex;
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
-    touch-action: manipulation; /* Prevent double-tap zoom on mobile */
+    touch-action: manipulation;
 }
 
-/* Optional background overlay for readability */
+/* Overlay for readability over background image */
 body::before {
     content: '';
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* dark overlay */
+    background: rgba(74, 44, 42, 0.6); /* Semi-transparent espresso brown */
     z-index: -1;
+    mix-blend-mode: overlay; /* Blends the overlay with the background image */
 }
 
+/* Optional background overlay for readability */
 .stats-overlay {
     padding: 20px;
-    background-color: rgba(34, 34, 34, 0.85);
+    background-color: rgba(74, 44, 42, 0.85); /* Dark espresso */
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -35,7 +37,7 @@ body::before {
     width: 100%;
     max-width: 800px;
     margin: 0 auto;
-    border-bottom: 3px solid #fff3e0;
+    border-bottom: 3px solid #FFF3E0;
     box-sizing: border-box;
 }
 
@@ -49,7 +51,7 @@ body::before {
 
 .score-items {
     display: flex;
-    gap: 20px;
+    gap: 15px;
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
@@ -65,10 +67,10 @@ body::before {
     display: flex;
     align-items: center;
     gap: 10px;
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: rgba(255, 243, 224, 0.15); /* Cream */
     padding: 8px 12px;
     border-radius: 8px;
-    border: 1px solid #f7a34b;
+    border: 1px solid #F7A34B; /* Gold */
     transition: box-shadow 0.3s;
 }
 
@@ -79,7 +81,7 @@ body::before {
 .level-selector label {
     font-weight: 600;
     font-size: 1.1rem;
-    color: #fff3e0;
+    color: #FFF3E0;
     cursor: default;
 }
 
@@ -87,20 +89,20 @@ body::before {
     padding: 8px 25px 8px 12px;
     border: none;
     border-radius: 6px;
-    background-color: #f7a34b;
-    color: #222;
+    background-color: #F7A34B;
+    color: #4A2C2A;
     font-weight: 600;
     font-size: 1rem;
     cursor: pointer;
     transition: background 0.3s, box-shadow 0.3s;
     appearance: none;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"><path fill="%23222" d="M7 10l5 5 5-5z"/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"><path fill="%234A2C2A" d="M7 10l5 5 5-5z"/></svg>');
     background-repeat: no-repeat;
     background-position: right 8px center;
 }
 
 .level-selector select:hover {
-    background-color: #ffbb66;
+    background-color: #D4A59A; /* Latte */
     box-shadow: 0 0 10px rgba(247, 163, 75, 0.6);
 }
 
@@ -113,10 +115,10 @@ body::before {
     display: flex;
     align-items: center;
     gap: 10px;
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: rgba(255, 243, 224, 0.15);
     padding: 8px 12px;
     border-radius: 8px;
-    border: 1px solid #f7a34b;
+    border: 1px solid #F7A34B;
     transition: box-shadow 0.3s;
 }
 
@@ -127,7 +129,7 @@ body::before {
 .volume-control label {
     font-weight: 600;
     font-size: 1.1rem;
-    color: #fff3e0;
+    color: #FFF3E0;
     cursor: default;
 }
 
@@ -135,7 +137,7 @@ body::before {
     -webkit-appearance: none;
     width: 80px;
     height: 6px;
-    background: #f7a34b;
+    background: #F7A34B;
     border-radius: 4px;
     outline: none;
     cursor: pointer;
@@ -150,7 +152,7 @@ body::before {
     -webkit-appearance: none;
     width: 14px;
     height: 14px;
-    background: #ffbb66;
+    background: #D4A59A;
     border-radius: 50%;
     cursor: pointer;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
@@ -159,7 +161,7 @@ body::before {
 .volume-control input[type="range"]::-moz-range-thumb {
     width: 14px;
     height: 14px;
-    background: #ffbb66;
+    background: #D4A59A;
     border-radius: 50%;
     cursor: pointer;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
@@ -167,38 +169,60 @@ body::before {
 
 button {
     padding: 10px 20px;
-    background-color: #f7a34b;
+    background-color: #F7A34B;
     border: none;
     border-radius: 6px;
-    color: #222;
+    color: #4A2C2A;
     font-weight: 600;
     font-size: 1rem;
     cursor: pointer;
     transition: background 0.3s, box-shadow 0.3s;
+    min-width: 48px;
+    min-height: 48px;
     pointer-events: auto;
 }
 
 button:hover {
-    background-color: #ffbb66;
+    background-color: #D4A59A;
     box-shadow: 0 0 10px rgba(247, 163, 75, 0.6);
 }
 
-#instructionBtn {
+#instructionBtn, #leaderboardBtn, #closeLeaderboardBtn {
     margin-top: 15px;
     padding: 10px 20px;
-    background-color: #f7a34b;
+    background-color: #F7A34B;
     border: none;
     border-radius: 6px;
-    color: #222;
+    color: #4A2C2A;
     font-weight: 600;
     font-size: 1rem;
     cursor: pointer;
     transition: background 0.3s, box-shadow 0.3s;
+    min-width: 48px;
+    min-height: 48px;
 }
 
-#instructionBtn:hover {
-    background-color: #ffbb66;
+#instructionBtn:hover, #leaderboardBtn:hover, #closeLeaderboardBtn:hover {
+    background-color: #D4A59A;
     box-shadow: 0 0 10px rgba(247, 163, 75, 0.6);
+}
+
+#playerName {
+    margin-top: 15px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    background-color: rgba(255, 243, 224, 0.9);
+    color: #4A2C2A;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    width: 200px;
+    cursor: text;
+}
+
+#playerName:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(247, 163, 75, 0.8);
 }
 
 .game-board {
@@ -208,7 +232,7 @@ button:hover {
     justify-content: center;
     padding: 20px;
     width: 100%;
-    max-width: 525px; /* 4 * 120px + 3 * 15px gaps + 20px padding per side */
+    max-width: 525px;
     margin: 0 auto;
     box-sizing: border-box;
 }
@@ -242,18 +266,18 @@ button:hover {
 }
 
 .card-front {
-    background-color: #444;
+    background-color: #D4A59A;
 }
 
 .card-back {
     transform: rotateY(180deg);
-    background-color: #fff;
+    background-color: #FFF3E0;
     box-shadow: 0 0 8px rgba(247, 163, 75, 0.7);
     transition: box-shadow 0.3s;
 }
 
 .card-back:hover {
-    box-shadow: 0 0 15px rgba(247, 163, 75, 1); /* Adjusted glow for smaller cards */
+    box-shadow: 0 0 15px rgba(247, 163, 75, 1);
 }
 
 .card-back img {
@@ -268,10 +292,10 @@ button:hover {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: rgba(17, 17, 17, 0.9);
+    background: rgba(74, 44, 42, 0.9);
     padding: 20px 30px;
-    border: 2px solid #f7a34b;
-    color: #fff;
+    border: 2px solid #F7A34B;
+    color: #FFF3E0;
     font-size: 1.4rem;
     font-weight: 400;
     max-width: 90%;
@@ -294,13 +318,74 @@ button:hover {
     cursor: default;
 }
 
+#leaderboardTables {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.leaderboard-table {
+    width: 100%;
+    max-width: 400px;
+    border-collapse: collapse;
+    margin: 15px 0;
+    font-size: 1.2rem;
+    color: #FFF3E0;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+    padding: 10px;
+    border: 1px solid #F7A34B;
+    text-align: center;
+    cursor: default;
+}
+
+.leaderboard-table th {
+    background-color: rgba(247, 163, 75, 0.3);
+    font-weight: 600;
+}
+
+.leaderboard-table td {
+    background-color: rgba(255, 243, 224, 0.1);
+}
+
+.leaderboard-table .leader-row {
+    background-color: rgba(247, 163, 75, 0.5);
+}
+
+.leaderboard-table .leader-row td:nth-child(2)::before {
+    content: '🏆 ';
+}
+
+#leaderboard h2 {
+    margin: 0 0 15px 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-shadow: 0 0 10px rgba(247, 163, 75, 0.8);
+    cursor: default;
+}
+
+#leaderboard h3 {
+    margin: 10px 0 5px;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #D4A59A;
+}
+
+/* Disabled state for locked elements */
+.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
 /* Disable hover effects on touch devices */
 @media (hover: none) {
     .card-back:hover {
-        box-shadow: 0 0 8px rgba(247, 163, 75, 0.7); /* Disable hover effect on touch devices */
+        box-shadow: 0 0 8px rgba(247, 163, 75, 0.7);
     }
-    .level-selector:hover, .volume-control:hover, button:hover, #instructionBtn:hover {
-        box-shadow: none; /* Disable hover effects on touch devices */
+    .level-selector:hover, .volume-control:hover, button:hover, #instructionBtn:hover, #leaderboardBtn:hover, #closeLeaderboardBtn:hover {
+        box-shadow: none;
     }
 }
 
@@ -315,7 +400,7 @@ button:hover {
     }
 
     .score-items {
-        gap: 15px;
+        gap: 10px;
         font-size: 1rem;
     }
 
@@ -357,16 +442,24 @@ button:hover {
         height: 12px;
     }
 
-    button, #instructionBtn {
+    button, #instructionBtn, #leaderboardBtn, #closeLeaderboardBtn {
         padding: 8px 16px;
         font-size: 0.9rem;
+        min-width: 48px;
+        min-height: 48px;
+    }
+
+    #playerName {
+        width: 150px;
+        font-size: 0.9rem;
+        padding: 6px 10px;
     }
 
     .game-board {
         grid-template-columns: repeat(auto-fit, minmax(70px, 100px));
         gap: 10px;
         padding: 15px;
-        max-width: 325px; /* 4 * 70px + 3 * 10px gaps + 15px padding per side */
+        max-width: 325px;
     }
 
     .card {
@@ -384,7 +477,7 @@ button:hover {
     }
 
     .card-back:hover {
-        box-shadow: 0 0 6px rgba(247, 163, 75, 0.7); /* Adjusted for mobile */
+        box-shadow: 0 0 6px rgba(247, 163, 75, 0.7);
     }
 
     .overlay-text {
@@ -393,10 +486,30 @@ button:hover {
         max-width: 85%;
     }
 
-    #instructionBtn {
-        margin-top: 10px;
-        padding: 8px 16px;
+    #leaderboard h2 {
+        font-size: 1.5rem;
+    }
+
+    #leaderboard h3 {
+        font-size: 1.2rem;
+    }
+
+    .leaderboard-table {
         font-size: 0.9rem;
+        max-width: 300px;
+    }
+
+    .leaderboard-table th,
+    .leaderboard-table td {
+        padding: 6px;
+    }
+
+    body {
+        background-size: cover;
+    }
+
+    .disabled {
+        opacity: 0.5;
     }
 }
 
