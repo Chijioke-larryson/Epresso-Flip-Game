@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <title>ESPRESSO-FLIP</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <script defer src="script.js"></script>
+</head>
+<body>
+<!-- HEADER TEXT AND STATS (Centered with enhanced difficulty switch and volume control) -->
+<div class="stats-overlay">
+    <h1 class="page-title">ESPRESSO-FLIP</h1>
+    <div class="score-items">
+        <span id="time">⏱ Time: 00:00</span>
+        <span id="flips">🔁 Flips: 0</span>
+        <span id="matches">✅ Matches: 0</span>
+        <div class="level-selector">
+            <label for="level">🎯 Difficulty:</label>
+            <select id="level">
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+                <option value="expert" selected>Expert</option>
+            </select>
+        </div>
+        <div class="volume-control">
+            <label for="volume">🔊 Volume:</label>
+            <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5">
+        </div>
+        <button id="restartBtn">🔄 Restart</button>
+    </div>
+</div>
+
+<!-- MAIN GAME BOARD -->
+<main class="game-board" id="gameBoard">
+    <!-- Cards will be dynamically inserted by JavaScript -->
+</main>
+
+<!-- OVERLAY TEXTS -->
+<div class="overlay-text" id="instructionText">
+    <p>Match pairs of cards by flipping them. Find all 6 pairs to win! Use the difficulty selector to adjust challenge.</p>
+    <button id="instructionBtn">Click to Continue</button>
+</div>
+<div class="overlay-text" id="startText">Click to Start</div>
+<div class="overlay-text" id="winText">You Win!</div>
+<div class="overlay-text" id="scoreText">Total Score: 0</div>
+</body>
+</html>

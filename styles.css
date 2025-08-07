@@ -1,111 +1,408 @@
-/* 1. Load custom font */
-@font-face {
-    font-family: 'AnimeFont';
-    src: url('fonts/your-font-file.ttf') format('truetype');
-}
-
-/* 2. Set universal font and cursor */
-* {
+/* GENERAL STYLES */
+body {
+    font-family: 'Poppins', sans-serif;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: 'AnimeFont', sans-serif;
-    cursor: url('cursors/custom-cursor.png'), auto;
-}
-
-/* 3. Body Styling */
-body {
-    background: linear-gradient(to bottom right, #fce4ec, #f3e5f5);
+    text-align: center;
+    background: url('Assets/Images/bg.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
     min-height: 100vh;
-    padding: 30px;
+    touch-action: manipulation; /* Prevent double-tap zoom on mobile */
 }
 
-/* 4. Game Title */
-h1 {
-    font-size: 3rem;
-    color: #6a1b9a;
-    margin-bottom: 20px;
+/* Optional background overlay for readability */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* dark overlay */
+    z-index: -1;
 }
 
-/* 5. Scoreboard */
-#scoreboard {
+.stats-overlay {
+    padding: 20px;
+    background-color: rgba(34, 34, 34, 0.85);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    border-bottom: 3px solid #fff3e0;
+    box-sizing: border-box;
+}
+
+.page-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    margin: 0;
+    text-shadow: 0 0 12px rgba(247, 163, 75, 0.8);
+    cursor: default;
+}
+
+.score-items {
     display: flex;
     gap: 20px;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
     font-size: 1.2rem;
-    margin-bottom: 20px;
-    color: #4a148c;
+    font-weight: 400;
 }
 
-/* 6. Card Grid */
-#card-grid {
+.score-items span {
+    cursor: default;
+}
+
+.level-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: rgba(255, 255, 255, 0.15);
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #f7a34b;
+    transition: box-shadow 0.3s;
+}
+
+.level-selector:hover {
+    box-shadow: 0 0 10px rgba(247, 163, 75, 0.6);
+}
+
+.level-selector label {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #fff3e0;
+    cursor: default;
+}
+
+.level-selector select {
+    padding: 8px 25px 8px 12px;
+    border: none;
+    border-radius: 6px;
+    background-color: #f7a34b;
+    color: #222;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s, box-shadow 0.3s;
+    appearance: none;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"><path fill="%23222" d="M7 10l5 5 5-5z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+}
+
+.level-selector select:hover {
+    background-color: #ffbb66;
+    box-shadow: 0 0 10px rgba(247, 163, 75, 0.6);
+}
+
+.level-selector select:focus {
+    outline: none;
+    box-shadow: 0 0 12px rgba(247, 163, 75, 0.8);
+}
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: rgba(255, 255, 255, 0.15);
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #f7a34b;
+    transition: box-shadow 0.3s;
+}
+
+.volume-control:hover {
+    box-shadow: 0 0 10px rgba(247, 163, 75, 0.6);
+}
+
+.volume-control label {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #fff3e0;
+    cursor: default;
+}
+
+.volume-control input[type="range"] {
+    -webkit-appearance: none;
+    width: 80px;
+    height: 6px;
+    background: #f7a34b;
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+    transition: box-shadow 0.3s;
+}
+
+.volume-control input[type="range"]:hover {
+    box-shadow: 0 0 10px rgba(247, 163, 75, 0.6);
+}
+
+.volume-control input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    background: #ffbb66;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.volume-control input[type="range"]::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    background: #ffbb66;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #f7a34b;
+    border: none;
+    border-radius: 6px;
+    color: #222;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s, box-shadow 0.3s;
+    pointer-events: auto;
+}
+
+button:hover {
+    background-color: #ffbb66;
+    box-shadow: 0 0 10px rgba(247, 163, 75, 0.6);
+}
+
+#instructionBtn {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #f7a34b;
+    border: none;
+    border-radius: 6px;
+    color: #222;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s, box-shadow 0.3s;
+}
+
+#instructionBtn:hover {
+    background-color: #ffbb66;
+    box-shadow: 0 0 10px rgba(247, 163, 75, 0.6);
+}
+
+.game-board {
     display: grid;
     grid-template-columns: repeat(4, 120px);
-    grid-gap: 20px;
+    gap: 15px;
+    justify-content: center;
+    padding: 20px;
+    width: 100%;
+    max-width: 525px; /* 4 * 120px + 3 * 15px gaps + 20px padding per side */
+    margin: 0 auto;
+    box-sizing: border-box;
 }
 
-/* 7. Card Container */
 .card {
     width: 120px;
-    height: 160px;
+    height: 120px;
     perspective: 1000px;
 }
 
-/* 8. Card Inner (flip wrapper) */
 .card-inner {
     width: 100%;
     height: 100%;
     transition: transform 0.6s;
     transform-style: preserve-3d;
     position: relative;
+    cursor: pointer;
 }
 
-/* Flip effect on click */
 .card.flipped .card-inner {
     transform: rotateY(180deg);
 }
 
-/* 9. Front and Back Faces */
 .card-front,
 .card-back {
     width: 100%;
     height: 100%;
     position: absolute;
     backface-visibility: hidden;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    border-radius: 6px;
 }
 
-/* Back (Visible by default) */
-.card-back {
-    background-color: #fff;
-    background-size: cover;
-    background-position: center;
-}
-
-/* Front (Hidden by default until flipped) */
 .card-front {
+    background-color: #444;
+}
+
+.card-back {
     transform: rotateY(180deg);
-    background-size: cover;
-    background-position: center;
+    background-color: #fff;
+    box-shadow: 0 0 8px rgba(247, 163, 75, 0.7);
+    transition: box-shadow 0.3s;
 }
 
-/* 10. Restart Button */
-button#restart-btn {
-    margin-top: 30px;
-    padding: 10px 20px;
-    font-size: 1rem;
-    background-color: #ab47bc;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+.card-back:hover {
+    box-shadow: 0 0 15px rgba(247, 163, 75, 1); /* Adjusted glow for smaller cards */
 }
 
-button#restart-btn:hover {
-    background-color: #8e24aa;
+.card-back img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.overlay-text {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(17, 17, 17, 0.9);
+    padding: 20px 30px;
+    border: 2px solid #f7a34b;
+    color: #fff;
+    font-size: 1.4rem;
+    font-weight: 400;
+    max-width: 90%;
+    line-height: 1.5;
+    text-align: center;
+    display: none;
+    z-index: 10;
+    border-radius: 12px;
+    text-shadow: 0 0 10px rgba(247, 163, 75, 0.7);
+    pointer-events: auto;
+    box-sizing: border-box;
+}
+
+.overlay-text.visible {
+    display: block;
+}
+
+.overlay-text p {
+    margin: 0 0 15px 0;
+    cursor: default;
+}
+
+/* Disable hover effects on touch devices */
+@media (hover: none) {
+    .card-back:hover {
+        box-shadow: 0 0 8px rgba(247, 163, 75, 0.7); /* Disable hover effect on touch devices */
+    }
+    .level-selector:hover, .volume-control:hover, button:hover, #instructionBtn:hover {
+        box-shadow: none; /* Disable hover effects on touch devices */
+    }
+}
+
+/* Mobile-specific styles */
+@media screen and (max-width: 600px) {
+    .page-title {
+        font-size: 2rem;
+    }
+
+    .stats-overlay {
+        padding: 15px;
+    }
+
+    .score-items {
+        gap: 15px;
+        font-size: 1rem;
+    }
+
+    .level-selector {
+        gap: 8px;
+        padding: 6px 10px;
+    }
+
+    .level-selector label {
+        font-size: 0.9rem;
+    }
+
+    .level-selector select {
+        padding: 6px 20px 6px 10px;
+        font-size: 0.9rem;
+    }
+
+    .volume-control {
+        gap: 8px;
+        padding: 6px 10px;
+    }
+
+    .volume-control label {
+        font-size: 0.9rem;
+    }
+
+    .volume-control input[type="range"] {
+        width: 60px;
+        height: 5px;
+    }
+
+    .volume-control input[type="range"]::-webkit-slider-thumb {
+        width: 12px;
+        height: 12px;
+    }
+
+    .volume-control input[type="range"]::-moz-range-thumb {
+        width: 12px;
+        height: 12px;
+    }
+
+    button, #instructionBtn {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+
+    .game-board {
+        grid-template-columns: repeat(auto-fit, minmax(70px, 100px));
+        gap: 10px;
+        padding: 15px;
+        max-width: 325px; /* 4 * 70px + 3 * 10px gaps + 15px padding per side */
+    }
+
+    .card {
+        width: 70px;
+        height: 70px;
+    }
+
+    .card-front,
+    .card-back {
+        border-radius: 5px;
+    }
+
+    .card-back img {
+        border-radius: 5px;
+    }
+
+    .card-back:hover {
+        box-shadow: 0 0 6px rgba(247, 163, 75, 0.7); /* Adjusted for mobile */
+    }
+
+    .overlay-text {
+        padding: 15px 20px;
+        font-size: 1.1rem;
+        max-width: 85%;
+    }
+
+    #instructionBtn {
+        margin-top: 10px;
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Ensure 4x3 grid on larger screens */
+@media screen and (min-width: 601px) {
+    .game-board {
+        grid-template-columns: repeat(4, 120px);
+    }
 }
